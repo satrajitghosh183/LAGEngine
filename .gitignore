@@ -1,0 +1,45 @@
+# Build directories
+/build/
+bin/
+lib/
+
+# CMake-generated files
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+CMakeLists.txt.user
+
+# Compiler-generated files
+*.obj
+*.o
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+*.exp
+*.pdb
+
+# IDE-specific files (VSCode, CLion, Xcode, Visual Studio)
+.vscode/
+.idea/
+*.sln
+*.vcxproj*
+*.xcodeproj
+*.xcworkspace
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.swo
+.DS_Store  # macOS-specific
+Thumbs.db  # Windows-specific
+
+# Shader cache (optional)
+*.spv
+
+# External dependencies (optional: If using prebuilt libraries)
+/vendor/
