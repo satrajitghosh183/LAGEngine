@@ -4,7 +4,7 @@
 #include <cmath>
 
 Cloth::Cloth(int width, int height, float spacing, const sf::Vector2f& origin)
-    : clothWidth(width), clothHeight(height)
+    : clothWidth(width), clothHeight(height), spacing(spacing)
 {
     // Create a grid of particles.
     for (int j = 0; j < clothHeight; ++j) {
@@ -63,20 +63,20 @@ Cloth::Cloth(int width, int height, float spacing, const sf::Vector2f& origin)
     }
 }
 
-void Cloth::update(float dt, const sf::Vector2f& acceleration, int iterations) {
-    // Update each particle.
+void Cloth::update(float dt, const sf::Vector2f& gravity, int iterations) {
+    // Update each particle using Verlet integration with gravity.
     for (auto &p : particles) {
-        p.update(dt, acceleration);
+        p.update(dt, gravity);
     }
 
-    // Relax constraints several times.
+    // Relax constraints several times to maintain structural integrity.
     for (int iter = 0; iter < iterations; ++iter) {
         for (const auto &c : constraints) {
             Particle& p1 = particles[c.p1];
             Particle& p2 = particles[c.p2];
             sf::Vector2f delta = p2.pos - p1.pos;
             float deltaLength = Math::length(delta);
-            float diff = (deltaLength - c.restLength) / deltaLength;
+            float diff = (deltaLength - c.restLength) / (deltaLength + 1e-6f); // Avoid division by zero.
 
             if (!p1.locked && !p2.locked) {
                 p1.pos += delta * 0.5f * diff;
@@ -86,6 +86,17 @@ void Cloth::update(float dt, const sf::Vector2f& acceleration, int iterations) {
             } else if (!p1.locked && p2.locked) {
                 p1.pos += delta * diff;
             }
+        }
+    }
+}
+
+void Cloth::applyWind(const sf::Vector2f& wind, float dt) {
+    // Apply wind force only to non-locked particles.
+    // Here, we add a displacement proportional to the wind and dt^2
+    // to mimic acceleration (consistent with Verlet integration).
+    for (auto &p : particles) {
+        if (!p.locked) {
+            p.pos += wind * (dt * dt);
         }
     }
 }

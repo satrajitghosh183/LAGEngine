@@ -1,32 +1,39 @@
 #include "Ball.hpp"
-#include "math.hpp"
+#include <cmath>
 
-Ball::Ball(const sf::Vector2f& position, const sf::Vector2f& initialVelocity, float radius)
-    : particle(position, initialVelocity), radius(radius)
-{}
+Ball::Ball(const sf::Vector2f& position, const sf::Vector2f& initialVelocity, float r, float rest)
+    : particle(position, initialVelocity), radius(r), restitution(rest) {}
 
 void Ball::update(float dt, const sf::Vector2f& acceleration, const sf::RenderWindow& window) {
+    // Update physics via Verlet integration.
     particle.update(dt, acceleration);
 
-    // Improved boundary collision handling with increased restitution.
-    sf::Vector2u size = window.getSize();
-    const float restitution = -0.95f;  // Increased restitution for more bounce.
+    // Retrieve window dimensions.
+    sf::Vector2u winSize = window.getSize();
 
-    if (particle.pos.x - radius < 0) {
-        particle.pos.x = radius;
-        particle.oldPos.x = particle.pos.x + (particle.pos.x - particle.oldPos.x) * restitution;
+    // Floor collision.
+    if (particle.pos.y + radius > winSize.y) {
+        particle.pos.y = winSize.y - radius;
+        float vy = particle.pos.y - particle.oldPos.y;
+        particle.oldPos.y = particle.pos.y + vy * restitution;
     }
-    if (particle.pos.x + radius > size.x) {
-        particle.pos.x = size.x - radius;
-        particle.oldPos.x = particle.pos.x + (particle.pos.x - particle.oldPos.x) * restitution;
-    }
+    // Ceiling collision.
     if (particle.pos.y - radius < 0) {
         particle.pos.y = radius;
-        particle.oldPos.y = particle.pos.y + (particle.pos.y - particle.oldPos.y) * restitution;
+        float vy = particle.pos.y - particle.oldPos.y;
+        particle.oldPos.y = particle.pos.y + vy * restitution;
     }
-    if (particle.pos.y + radius > size.y) {
-        particle.pos.y = size.y - radius;
-        particle.oldPos.y = particle.pos.y + (particle.pos.y - particle.oldPos.y) * restitution;
+    // Left wall.
+    if (particle.pos.x - radius < 0) {
+        particle.pos.x = radius;
+        float vx = particle.pos.x - particle.oldPos.x;
+        particle.oldPos.x = particle.pos.x + vx * restitution;
+    }
+    // Right wall.
+    if (particle.pos.x + radius > winSize.x) {
+        particle.pos.x = winSize.x - radius;
+        float vx = particle.pos.x - particle.oldPos.x;
+        particle.oldPos.x = particle.pos.x + vx * restitution;
     }
 }
 

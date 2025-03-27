@@ -11,11 +11,11 @@ Cloth3D::Cloth3D(int w, int h, float s, const glm::vec3 &origin)
             glm::vec3 pos = origin + glm::vec3(i * spacing, -j * spacing, 0.0f);
             Particle3D p(pos);
             if (j == 0)
-                p.locked = true;  // Anchor the top row.
+                p.locked = true;  
             particles.push_back(p);
         }
     }
-    // Create structural constraints.
+    
     for (int j = 0; j < height; ++j) {
         for (int i = 0; i < width; ++i) {
             int index = j * width + i;
@@ -33,7 +33,7 @@ Cloth3D::Cloth3D(int w, int h, float s, const glm::vec3 &origin)
                 c.restLength = spacing;
                 constraints.push_back(c);
             }
-            // Diagonal (shear) constraints.
+            
             if (i < width - 1 && j < height - 1) {
                 Constraint3D c;
                 c.p1 = index;
@@ -78,6 +78,6 @@ void Cloth3D::update(float dt, const glm::vec3 &acceleration, int iterations) {
 void Cloth3D::applyWind(const glm::vec3 &windForce) {
     for (auto &p : particles) {
         if (!p.locked)
-            p.pos += windForce;  // In production, scale by dt and mass.
+            p.pos += windForce;  
     }
 }

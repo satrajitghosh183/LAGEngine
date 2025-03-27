@@ -17,15 +17,17 @@ public:
 
     int clothWidth;
     int clothHeight;
+    float spacing;
 
-    // Create a cloth grid starting at 'origin' with given spacing.
+    // Constructor: creates a cloth grid starting at 'origin' with given spacing.
     Cloth(int width, int height, float spacing, const sf::Vector2f& origin);
 
-    // Update the cloth simulation.
-    // dt: delta time; acceleration: external acceleration (e.g. gravity);
-    // iterations: number of constraint relaxation iterations.
-    void update(float dt, const sf::Vector2f& acceleration, int iterations);
+    // Update function applies gravity (or any base acceleration) and relaxes constraints.
+    void update(float dt, const sf::Vector2f& gravity, int iterations);
 
-    // Draw the cloth (constraints and particles).
+    // Applies a constant wind force to each unlocked particle.
+    void applyWind(const sf::Vector2f& wind, float dt);
+
+    // Draw the cloth.
     void draw(sf::RenderWindow& window);
 };
