@@ -75,12 +75,14 @@ GameEngineX is built from the ground up with a focus on:
 - **OpenGL** 4.5+
 - (Optional) **GLAD**, **Assimp**, **OpenAL**, **Bullet**
 
-### 🧪 Build (Linux/macOS/Windows)
+### 🧪 Build 
 ```bash
-git clone https://github.com/yourname/GameEngineX.git
-cd GameEngineX
+git clone https://github.com/satrajitghosh183/LAGEngine.git
+cd LAGEngine
 mkdir build
 cd build
 cmake ..
-make  # or cmake --build . --config Release on Windows
-./bin/GameEngineX  # or GameEngineX.exe on Windows
+make  # or cmake --build .
+
+You can also use the run_game_engine.sh to do all these steps all at once 
+
