@@ -1,5 +1,3 @@
-
-
 #include <SFML/Graphics.hpp>
 #include "Cloth.hpp"
 #include "Ball.hpp"

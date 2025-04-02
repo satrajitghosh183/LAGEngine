@@ -16,7 +16,7 @@
 
 
 
-
+ 
 
 cmake_minimum_required(VERSION 3.16)
 project(GameEngine3D)
@@ -38,3 +38,35 @@ file(GLOB SRC_FILES "${PROJECT_SOURCE_DIR}/src_3D/*.cpp")
 add_executable(GameEngine3D ${SRC_FILES})
 target_link_libraries(GameEngine3D glfw GLEW::GLEW glm::glm OpenGL::GL)
 
+
+
+
+# cmake_minimum_required(VERSION 3.16)
+# project(CustomGameEngine)
+# set(CMAKE_CXX_STANDARD 17)
+
+# # === Include Engine Headers ===
+# include_directories(${ENGINE_DIR})
+# include_directories(${CMAKE_SOURCE_DIR})  # <-- Add this line
+
+# set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
+
+# # === Include Engine Headers ===
+# include_directories(${ENGINE_DIR})
+
+# # === Dependencies ===
+# find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
+# find_package(OpenGL REQUIRED)
+# find_package(GLEW REQUIRED)
+# find_package(glfw3 REQUIRED)
+
+# # === Engine Source Files ===
+# file(GLOB_RECURSE ENGINE_SOURCES ${ENGINE_DIR}/*.cpp ${ENGINE_DIR}/*.hpp)
+
+# # === main2D Executable ===
+# add_executable(main2D ${SRC_DIR}/main2D.cpp ${ENGINE_SOURCES})
+# target_link_libraries(main2D sfml-graphics sfml-window sfml-system)
+
+# # === main3D Executable ===
+# add_executable(main3D ${SRC_DIR}/main3D.cpp ${ENGINE_SOURCES})
+# target_link_libraries(main3D ${OPENGL_LIBRARIES} GLEW::GLEW glfw sfml-system)
