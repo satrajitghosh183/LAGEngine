@@ -43,3 +43,4 @@ Thumbs.db  # Windows-specific
 
 # External dependencies (optional: If using prebuilt libraries)
 /vendor/
+.qodo
