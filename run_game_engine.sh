@@ -17,5 +17,6 @@ cmake .. || { echo "❌ CMake failed"; exit 1; }
 echo "🔨 Running Make..."
 make || { echo "❌ Make failed"; exit 1; }
 
-echo "🚀 Running GameEngine3D..."
-./bin/GameEngine3D || echo "❌ GameEngine3D crashed"
+
+# echo "🚀 Running GameEngine3D..."
+# ./bin/GameEngine3D || echo "❌ GameEngine3D crashed"

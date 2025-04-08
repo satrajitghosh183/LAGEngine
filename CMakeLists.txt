@@ -1,72 +1,72 @@
-# cmake_minimum_required(VERSION 3.16)
-# project(GameEngine)
-
-# set(CMAKE_CXX_STANDARD 17)
-# set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-# find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
-# include_directories(${PROJECT_SOURCE_DIR}/include)
-
-# file(GLOB SRC_FILES "${PROJECT_SOURCE_DIR}/src/*.cpp")
-
-# add_executable(GameEngine ${SRC_FILES})
-# target_link_libraries(GameEngine sfml-graphics sfml-window sfml-system)
-
-
-
- 
-
 cmake_minimum_required(VERSION 3.16)
-project(GameEngine3D)
+project(CustomGameEngine)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-find_package(glfw3 REQUIRED)
-find_package(GLEW REQUIRED)
-find_package(glm REQUIRED)
+# === Directory Setup ===
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
+set(ENGINE_DIR ${CMAKE_SOURCE_DIR}/engine)
+set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/external)
+set(GLAD_DIR ${EXTERNAL_DIR}/glad)
+
+# === GLAD ===
+file(GLOB GLAD_SOURCES ${GLAD_DIR}/src/*.c)
+include_directories(${GLAD_DIR}/include)
+
+# === Includes ===
+include_directories(${ENGINE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}) # Includes src/
+include_directories(${EXTERNAL_DIR})
+
+# === Dependencies ===
 find_package(OpenGL REQUIRED)
+find_package(glfw3 REQUIRED)
+find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
+# === Engine Sources ===
 
-# Collect all .cpp files from src_3D.
-file(GLOB SRC_FILES "${PROJECT_SOURCE_DIR}/src_3D/*.cpp")
+# --- 2D Engine Sources ---
+file(GLOB_RECURSE ENGINE_2D_SOURCES
+    ${ENGINE_DIR}/core/*.cpp
+    ${ENGINE_DIR}/scene/*.cpp
+    ${ENGINE_DIR}/physics/Particle.cpp
+    ${ENGINE_DIR}/physics/Constraint2D.cpp
+    ${ENGINE_DIR}/objects/Ball2D.cpp
+    ${ENGINE_DIR}/objects/Cloth2D.cpp
+)
 
-add_executable(GameEngine3D ${SRC_FILES})
-target_link_libraries(GameEngine3D glfw GLEW::GLEW glm::glm OpenGL::GL)
+# --- 3D Engine Sources ---
+file(GLOB_RECURSE ENGINE_3D_SOURCES
+    ${ENGINE_DIR}/core/*.cpp
+    ${ENGINE_DIR}/scene/*.cpp
+    ${ENGINE_DIR}/graphics/*.cpp
+    ${ENGINE_DIR}/physics/Particle3D.cpp
+    ${ENGINE_DIR}/physics/Constraint3D.cpp
+    ${ENGINE_DIR}/objects/Ball3D.cpp
+    ${ENGINE_DIR}/objects/Cloth3D.cpp   # ✅ Ensure this is listed
+)
 
+# === Executable: 2D ===
+add_executable(main2D
+    ${SRC_DIR}/main2D.cpp
+    ${ENGINE_2D_SOURCES}
+)
 
+target_link_libraries(main2D
+    sfml-graphics
+    sfml-window
+    sfml-system
+)
 
+# === Executable: 3D ===
+add_executable(main3D
+    ${SRC_DIR}/main3D.cpp
+    ${ENGINE_3D_SOURCES}
+    ${GLAD_SOURCES}
+)
 
-# cmake_minimum_required(VERSION 3.16)
-# project(CustomGameEngine)
-# set(CMAKE_CXX_STANDARD 17)
-
-# # === Include Engine Headers ===
-# include_directories(${ENGINE_DIR})
-# include_directories(${CMAKE_SOURCE_DIR})  # <-- Add this line
-
-# set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
-
-# # === Include Engine Headers ===
-# include_directories(${ENGINE_DIR})
-
-# # === Dependencies ===
-# find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
-# find_package(OpenGL REQUIRED)
-# find_package(GLEW REQUIRED)
-# find_package(glfw3 REQUIRED)
-
-# # === Engine Source Files ===
-# file(GLOB_RECURSE ENGINE_SOURCES ${ENGINE_DIR}/*.cpp ${ENGINE_DIR}/*.hpp)
-
-# # === main2D Executable ===
-# add_executable(main2D ${SRC_DIR}/main2D.cpp ${ENGINE_SOURCES})
-# target_link_libraries(main2D sfml-graphics sfml-window sfml-system)
-
-# # === main3D Executable ===
-# add_executable(main3D ${SRC_DIR}/main3D.cpp ${ENGINE_SOURCES})
-# target_link_libraries(main3D ${OPENGL_LIBRARIES} GLEW::GLEW glfw sfml-system)
+target_link_libraries(main3D
+    ${OPENGL_LIBRARIES}
+    glfw
+    sfml-system
+)

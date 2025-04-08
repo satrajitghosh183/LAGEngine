@@ -3,6 +3,7 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "Particle.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace engine::physics {
 
