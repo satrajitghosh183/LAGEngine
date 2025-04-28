@@ -1,3 +1,4 @@
+
 // engine/objects/Ball2D.cpp
 #include "engine/objects/Ball2D.hpp"
 
@@ -9,16 +10,20 @@ namespace engine::objects {
                    float rest)
         : particle(position, velocity), radius(r), restitution(rest) {}
 
-    void Ball2D::update(float dt, const sf::Vector2f& acceleration, const sf::RenderWindow& window) {
-        particle.update(dt, acceleration);
-        particle.constrainToWindow(window);
-    }
+    void Ball2D::update(float dt) {
+        if (!active) return;
 
-    void Ball2D::update(float) {
-        // Stub for Object2D interface
+        particle.update(dt, gravity);
+
+        // Soft delete if out of bounds
+        if (particle.pos.y > 1000 || particle.pos.x < -100 || particle.pos.x > 1400) {
+            active = false;
+            visible = false;
+        }
     }
 
     void Ball2D::render(sf::RenderWindow& window) {
+        if (!visible) return;
         sf::CircleShape shape(radius);
         shape.setOrigin(radius, radius);
         shape.setPosition(particle.pos);
@@ -26,4 +31,4 @@ namespace engine::objects {
         window.draw(shape);
     }
 
-} // namespace engine::objects
+}

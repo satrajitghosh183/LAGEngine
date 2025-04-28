@@ -1,4 +1,7 @@
+
 #include "engine/objects/Cloth2D.hpp"
+#include "engine/objects/Ball2D.hpp"
+#include <cmath>
 
 namespace engine::objects {
 
@@ -27,6 +30,10 @@ namespace engine::objects {
         for (auto& p : particles) p.update(dt, gravity);
         for (int i = 0; i < iterations; ++i)
             for (auto& c : constraints) c.satisfy(particles);
+
+        if (projectiles) {
+            checkCollisionAndTear();
+        }
     }
 
     void Cloth2D::update(float dt) {
@@ -39,6 +46,28 @@ namespace engine::objects {
             const auto& p2 = particles[c.p2Index].pos;
             sf::Vertex line[] = { sf::Vertex(p1), sf::Vertex(p2) };
             window.draw(line, 2, sf::Lines);
+        }
+    }
+
+    void Cloth2D::setProjectiles(std::vector<Ball2D*>* proj) { // ✅ Fix: use pointer
+        projectiles = proj;
+    }
+
+    void Cloth2D::checkCollisionAndTear() {
+        if (!projectiles) return;
+
+        for (auto* ball : *projectiles) {
+            sf::Vector2f ballPos = ball->particle.pos;
+            float radius = ball->radius;
+
+            constraints.erase(std::remove_if(constraints.begin(), constraints.end(),
+                [&](const Constraint2D& c) {
+                    const auto& p1 = particles[c.p1Index].pos;
+                    const auto& p2 = particles[c.p2Index].pos;
+                    return (std::hypot(p1.x - ballPos.x, p1.y - ballPos.y) < radius) ||
+                           (std::hypot(p2.x - ballPos.x, p2.y - ballPos.y) < radius);
+                }),
+                constraints.end());
         }
     }
 

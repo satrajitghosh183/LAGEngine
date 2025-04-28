@@ -1,4 +1,4 @@
-// engine/objects/Ball2D.hpp
+
 #pragma once
 
 #include <SFML/Graphics.hpp>
@@ -12,15 +12,15 @@ namespace engine::objects {
         engine::physics::Particle particle;
         float radius;
         float restitution;
+        sf::Vector2f gravity = {0.f, 980.f}; // ✅ gravity added internally
 
         Ball2D(const sf::Vector2f& position,
                const sf::Vector2f& velocity,
                float r,
                float rest = 0.8f);
 
-        void update(float dt, const sf::Vector2f& acceleration, const sf::RenderWindow& window);
-        void update(float) override;
+        void update(float dt) override;
         void render(sf::RenderWindow& window) override;
     };
 
-} // namespace engine::objects
+}

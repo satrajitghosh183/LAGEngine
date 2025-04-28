@@ -14,6 +14,7 @@ namespace engine::physics {
     public:
         std::vector<Particle3D> particles;
         std::vector<Constraint3D> constraints;
+        
 
         ClothSolver() = default;
 

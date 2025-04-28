@@ -1,88 +1,57 @@
-// #include "engine/objects/Ball3D.hpp"
-// #include <glm/gtc/matrix_transform.hpp>
-
-// namespace engine::objects {
-
-//     Ball3D::Ball3D(const glm::vec3& pos, const glm::vec3& velocity, float r, float rest)
-//         : particle(pos, velocity), radius(r), restitution(rest) {
-//         mesh.vertices.push_back(pos); // Can replace with Sphere mesh later
-//         mesh.upload();
-//     }
-
-//     void Ball3D::update(float) {}
-
-//     void Ball3D::update(float dt, const glm::vec3& acceleration,
-//                         const glm::vec3& minBounds, const glm::vec3& maxBounds) {
-//         particle.update(dt, acceleration);
-
-//         for (int i = 0; i < 3; ++i) {
-//             if (particle.pos[i] - radius < minBounds[i]) {
-//                 particle.pos[i] = minBounds[i] + radius;
-//                 particle.oldPos[i] = particle.pos[i] + (particle.pos[i] - particle.oldPos[i]) * -restitution;
-//             }
-//             if (particle.pos[i] + radius > maxBounds[i]) {
-//                 particle.pos[i] = maxBounds[i] - radius;
-//                 particle.oldPos[i] = particle.pos[i] + (particle.pos[i] - particle.oldPos[i]) * -restitution;
-//             }
-//         }
-
-//         mesh.vertices[0] = particle.pos;
-//         mesh.updateVertices();
-//     }
-
-//     void Ball3D::render(const engine::graphics::Shader& shader) {
-//         shader.setMat4("model", glm::translate(glm::mat4(1.0f), particle.pos));
-//         mesh.draw(GL_POINTS);
-//     }
-
-// } // namespace engine::objects
-
-
-#include "engine/objects/Ball3D.hpp"
-#include <glm/gtc/matrix_transform.hpp>
+#include "Ball3D.hpp"
 
 namespace engine::objects {
 
-    Ball3D::Ball3D(const glm::vec3& pos, const glm::vec3& velocity, float r, float rest)
-        : particle(pos, velocity), radius(r), restitution(rest) {
-        mesh.vertices.push_back(pos);
-        mesh.upload();
-    }
+Ball3D::Ball3D(const glm::vec3& pos, float r, float m)
+    : position(pos), velocity(0.0f), accumulatedForce(0.0f), radius(r), mass(m) {}
 
-    void Ball3D::update(float) {}
-
-    void Ball3D::update(float dt, const glm::vec3& acceleration,
-                        const glm::vec3& minBounds, const glm::vec3& maxBounds) {
-        particle.update(dt, acceleration);
-
-        for (int i = 0; i < 3; ++i) {
-            if (particle.pos[i] - radius < minBounds[i]) {
-                particle.pos[i] = minBounds[i] + radius;
-                particle.oldPos[i] = particle.pos[i] + (particle.pos[i] - particle.oldPos[i]) * -restitution;
-            }
-            if (particle.pos[i] + radius > maxBounds[i]) {
-                particle.pos[i] = maxBounds[i] - radius;
-                particle.oldPos[i] = particle.pos[i] + (particle.pos[i] - particle.oldPos[i]) * -restitution;
-            }
-        }
-
-        mesh.vertices[0] = particle.pos;
-        mesh.updateVertices();
-    }
-
-    void Ball3D::render(const engine::graphics::Shader& shader) {
-        shader.setMat4("model", glm::translate(glm::mat4(1.0f), particle.pos));
-        mesh.draw(GL_POINTS);
-    }
-
-    void Ball3D::interactWithCloth(Cloth3D* cloth, float forceMultiplier) {
-        for (auto& p : cloth->particles) {
-            float dist = glm::length(p.pos - particle.pos);
-            if (dist < radius) {
-                glm::vec3 dir = glm::normalize(p.pos - particle.pos + glm::vec3(1e-4f));
-                p.pos += dir * forceMultiplier; // Displace to simulate impulse
-            }
-        }
-    }
-
+void Ball3D::applyForce(const glm::vec3& force) {
+    accumulatedForce += force;
 }
+
+void Ball3D::setVelocity(const glm::vec3& vel) {
+    velocity = vel;
+}
+
+void Ball3D::setPosition(const glm::vec3& pos) {
+    position = pos;
+}
+
+void Ball3D::setMass(float m) {
+    mass = m;
+}
+
+const glm::vec3& Ball3D::getPosition() const {
+    return position;
+}
+
+const glm::vec3& Ball3D::getVelocity() const {
+    return velocity;
+}
+
+float Ball3D::getRadius() const {
+    return radius;
+}
+
+float Ball3D::getMass() const {
+    return mass;
+}
+
+void Ball3D::update(float dt) {
+    if (mass <= 0.0f) return;
+
+    glm::vec3 acceleration = accumulatedForce / mass;
+    velocity += acceleration * dt;
+    position += velocity * dt;
+
+    accumulatedForce = glm::vec3(0.0f); // Clear after each frame
+}
+
+void Ball3D::resolveGroundCollision(float groundY, float restitution) {
+    if (position.y - radius < groundY) {
+        position.y = groundY + radius;
+        velocity.y = -velocity.y * restitution;
+    }
+}
+
+} // namespace engine::objects

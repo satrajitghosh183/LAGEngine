@@ -1,64 +1,32 @@
-// #pragma once
-// #include <glm/glm.hpp>
-// #include <glm/gtc/matrix_transform.hpp>
-// #include "engine/physics/Particle3D.hpp"
-// #include "engine/scene/Object3D.hpp"
-// #include "engine/graphics/Mesh.hpp"
-// #include "engine/graphics/Shader.hpp"
-
-// namespace engine::objects {
-
-//     class Ball3D : public engine::scene::Object3D {
-//     public:
-//         engine::physics::Particle3D particle;
-//         float radius;
-//         float restitution;
-//         engine::graphics::Mesh mesh;
-
-//         Ball3D(const glm::vec3& pos,
-//                const glm::vec3& velocity,
-//                float r,
-//                float rest = 0.95f);
-
-//         void update(float) override;
-
-//         void update(float dt, const glm::vec3& acceleration,
-//                     const glm::vec3& minBounds, const glm::vec3& maxBounds);
-
-//         void render(const engine::graphics::Shader& shader) override;
-//     };
-
-// } // namespace engine::objects
 #pragma once
+
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include "engine/physics/Particle3D.hpp"
-#include "engine/scene/Object3D.hpp"
-#include "engine/graphics/Mesh.hpp"
-#include "engine/graphics/Shader.hpp"
-#include "engine/objects/Cloth3D.hpp" // ✅ added for interaction
 
 namespace engine::objects {
 
-    class Ball3D : public engine::scene::Object3D {
-    public:
-        engine::physics::Particle3D particle;
-        float radius;
-        float restitution;
-        engine::graphics::Mesh mesh;
+class Ball3D {
+public:
+    Ball3D(const glm::vec3& position, float radius, float mass = 1.0f);
 
-        Ball3D(const glm::vec3& pos,
-               const glm::vec3& velocity,
-               float r,
-               float rest = 0.95f);
+    void applyForce(const glm::vec3& force);
+    void setVelocity(const glm::vec3& vel);
+    void setPosition(const glm::vec3& pos);
+    void setMass(float m);
 
-        void update(float) override;
-        void update(float dt, const glm::vec3& acceleration,
-                    const glm::vec3& minBounds, const glm::vec3& maxBounds);
-        void render(const engine::graphics::Shader& shader) override;
+    const glm::vec3& getPosition() const;
+    const glm::vec3& getVelocity() const;
+    float getRadius() const;
+    float getMass() const;
 
-        // ✅ New: Cloth interaction logic
-        void interactWithCloth(Cloth3D* cloth, float forceMultiplier = 1.0f);
-    };
+    void update(float dt);
+    void resolveGroundCollision(float groundY = 0.0f, float restitution = 0.5f);
 
-}
+private:
+    glm::vec3 position;
+    glm::vec3 velocity;
+    glm::vec3 accumulatedForce;
+    float radius;
+    float mass;
+};
+
+} // namespace engine::objects

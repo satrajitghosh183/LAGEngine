@@ -7,6 +7,8 @@
 
 namespace engine::objects {
 
+    class Ball2D;
+
     class Cloth2D : public scene::Object2D {
     public:
         int width, height;
@@ -16,10 +18,16 @@ namespace engine::objects {
 
         Cloth2D(int w, int h, float s, const sf::Vector2f& origin);
 
-        void update(float dt) override; // <- now overrides base class
+        void update(float dt) override;
         void render(sf::RenderWindow& window) override;
 
         void update(float dt, const sf::Vector2f& gravity, int iterations);
+
+        void setProjectiles(std::vector<Ball2D*>* projectiles); // ✅ Fix: pass pointer!
+
+    private:
+        std::vector<Ball2D*>* projectiles = nullptr; // ✅ Pointer to live list
+        void checkCollisionAndTear();
     };
 
 }

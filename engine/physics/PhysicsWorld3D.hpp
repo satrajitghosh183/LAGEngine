@@ -1,29 +1,35 @@
-// engine/physics/PhysicsWorld3D.hpp
 #pragma once
-#include "Particle3D.hpp"
-#include "Constraint3D.hpp"
+
 #include <vector>
+#include <memory>
 #include <glm/glm.hpp>
+
+#include "VertletSystem3D.hpp"
+#include "ClothSolver3D.hpp"
+#include "SoftBodySystem3D.hpp"
+#include "../objects/Ball3D.hpp"
 
 namespace engine::physics {
 
-    class PhysicsWorld3D {
-    public:
-        std::vector<Particle3D*> particles;
-        std::vector<Constraint3D*> constraints;
+class PhysicsWorld3D : public VertletSystem3D {
+public:
+    PhysicsWorld3D();
 
-        float damping = 0.98f;
-        float tearThreshold = 5.0f;
+    void setGravity(const glm::vec3& gravity);
+    void update(float dt, int solverIterations = 5);
 
-        void addParticle(Particle3D* p) {
-            particles.push_back(p);
-        }
+    void addCloth(const std::shared_ptr<ClothSolver3D>& cloth);
+    void addBall(const std::shared_ptr<engine::objects::Ball3D>& ball);
 
-        void addConstraint(Constraint3D* c) {
-            constraints.push_back(c);
-        }
+    const std::vector<std::shared_ptr<ClothSolver3D>>& getCloths() const { return cloths; }
+    const std::vector<std::shared_ptr<engine::objects::Ball3D>>& getBalls() const { return balls; }
 
-        void update(float dt, const glm::vec3& acceleration);
-    };
+private:
+    glm::vec3 gravity;
+    int solverIterations;
+
+    std::vector<std::shared_ptr<ClothSolver3D>> cloths;
+    std::vector<std::shared_ptr<engine::objects::Ball3D>> balls;
+};
 
 } // namespace engine::physics

@@ -32,6 +32,7 @@ file(GLOB_RECURSE ENGINE_CORE_SOURCES
 file(GLOB_RECURSE ENGINE_2D_SOURCES
     ${ENGINE_DIR}/objects/Ball2D.cpp
     ${ENGINE_DIR}/objects/Cloth2D.cpp
+    ${ENGINE_DIR}/objects/Cannon2D.cpp
     ${ENGINE_DIR}/physics/Particle.cpp
     ${ENGINE_DIR}/physics/Constraint2D.cpp
     ${ENGINE_DIR}/scene/Scene2D.cpp
@@ -39,16 +40,45 @@ file(GLOB_RECURSE ENGINE_2D_SOURCES
 )
 
 # === 3D Module Sources ===
+# file(GLOB_RECURSE ENGINE_3D_SOURCES
+#     ${ENGINE_DIR}/graphics/*.cpp
+#     ${ENGINE_DIR}/objects/Ball3D.cpp
+#     ${ENGINE_DIR}/objects/Cloth3D.cpp
+#     ${ENGINE_DIR}/physics/Particle3D.cpp
+#     ${ENGINE_DIR}/physics/Constraint3D.cpp
+#     ${ENGINE_DIR}/physics/PhysicsWorld3D.cpp
+#     ${ENGINE_DIR}/scene/Scene3D.cpp
+#     ${ENGINE_DIR}/scene/SceneManager3D.cpp
+    
+# )
+
+
+# === 3D Module Sources ===
 file(GLOB_RECURSE ENGINE_3D_SOURCES
-    ${ENGINE_DIR}/graphics/*.cpp
+    ${ENGINE_DIR}/graphics/Camera.cpp
+    ${ENGINE_DIR}/graphics/Shader.cpp
+    ${ENGINE_DIR}/graphics/Mesh.cpp         # <-- ADD THIS (was missing)
+    ${ENGINE_DIR}/graphics/Mesh3D.cpp
+    ${ENGINE_DIR}/graphics/MeshGenerator3D.cpp
+    ${ENGINE_DIR}/graphics/Texture2D.cpp
+
+    ${EXTERNAL_DIR}/stb_image.cpp
+
+
     ${ENGINE_DIR}/objects/Ball3D.cpp
     ${ENGINE_DIR}/objects/Cloth3D.cpp
+
     ${ENGINE_DIR}/physics/Particle3D.cpp
-    ${ENGINE_DIR}/physics/Constraint3D.cpp
+    ${ENGINE_DIR}/physics/Constraint3D.cpp  # <-- ADD THIS (was missing)
+    ${ENGINE_DIR}/physics/Spring3D.cpp
+    ${ENGINE_DIR}/physics/VertletSystem3D.cpp
+    ${ENGINE_DIR}/physics/ClothSolver3D.cpp
     ${ENGINE_DIR}/physics/PhysicsWorld3D.cpp
+
     ${ENGINE_DIR}/scene/Scene3D.cpp
-    ${ENGINE_DIR}/scene/SceneManager3D.cpp
+    ${ENGINE_DIR}/scene/SceneManager3D.cpp  # <-- ADD THIS (was missing)
 )
+
 
 # === 2D Executable ===
 add_executable(main2D

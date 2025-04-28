@@ -1,72 +1,79 @@
-
-#include "engine/graphics/Camera.hpp"
+#include "Camera.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/constants.hpp>
 
 namespace engine::graphics {
 
-    Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
-        : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(5.0f), MouseSensitivity(0.1f), Zoom(45.0f) {
-        Position = position;
-        WorldUp = up;
-        Yaw = yaw;
-        Pitch = pitch;
-        updateCameraVectors();
-    }
+Camera::Camera(float fovDeg, float aspect, float nearC, float farC)
+    : fov(fovDeg), aspectRatio(aspect), nearClip(nearC), farClip(farC),
+      yaw(-90.0f), pitch(0.0f) {
 
-    glm::mat4 Camera::GetViewMatrix() const {
-        return glm::lookAt(Position, Position + Front, Up);
-    }
+    position = glm::vec3(0.0f, 0.0f, 3.0f);
+    target = glm::vec3(0.0f, 0.0f, 0.0f);
+    up = glm::vec3(0.0f, 1.0f, 0.0f);
 
-    glm::mat4 Camera::GetProjectionMatrix(float aspectRatio) const {
-        return glm::perspective(glm::radians(Zoom), aspectRatio, 0.1f, 1000.0f);
-    }
+    updateVectors();
+}
 
-    void Camera::ProcessKeyboard(CameraMovement direction, float deltaTime) {
-        float velocity = MovementSpeed * deltaTime;
-        if (direction == CameraMovement::FORWARD)
-            Position += Front * velocity;
-        if (direction == CameraMovement::BACKWARD)
-            Position -= Front * velocity;
-        if (direction == CameraMovement::LEFT)
-            Position -= Right * velocity;
-        if (direction == CameraMovement::RIGHT)
-            Position += Right * velocity;
-        if (direction == CameraMovement::UP)
-            Position += WorldUp * velocity;
-        if (direction == CameraMovement::DOWN)
-            Position -= WorldUp * velocity;
-    }
+void Camera::setPosition(const glm::vec3& pos) {
+    position = pos;
+    updateVectors();
+}
 
-    void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch) {
-        xoffset *= MouseSensitivity;
-        yoffset *= MouseSensitivity;
+void Camera::setTarget(const glm::vec3& tgt) {
+    target = tgt;
+    updateVectors();
+}
 
-        Yaw += xoffset;
-        Pitch += yoffset;
+void Camera::setUpDirection(const glm::vec3& upDir) {
+    up = upDir;
+    updateVectors();
+}
 
-        if (constrainPitch) {
-            if (Pitch > 89.0f)
-                Pitch = 89.0f;
-            if (Pitch < -89.0f)
-                Pitch = -89.0f;
-        }
+void Camera::move(const glm::vec3& delta) {
+    position += delta;
+    target += delta;
+    updateVectors();
+}
 
-        updateCameraVectors();
-    }
+void Camera::rotate(float yawDegrees, float pitchDegrees) {
+    yaw += yawDegrees;
+    pitch += pitchDegrees;
 
-    void Camera::ProcessMouseScroll(float yoffset) {
-        Zoom -= yoffset;
-        if (Zoom < 1.0f) Zoom = 1.0f;
-        if (Zoom > 90.0f) Zoom = 90.0f;
-    }
+    if (pitch > 89.0f) pitch = 89.0f;
+    if (pitch < -89.0f) pitch = -89.0f;
 
-    void Camera::updateCameraVectors() {
-        glm::vec3 front;
-        front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-        front.y = sin(glm::radians(Pitch));
-        front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-        Front = glm::normalize(front);
-        Right = glm::normalize(glm::cross(Front, WorldUp));
-        Up = glm::normalize(glm::cross(Right, Front));
-    }
+    updateVectors();
+}
+
+glm::mat4 Camera::getViewMatrix() const {
+    return glm::lookAt(position, position + forward, up);
+}
+
+glm::mat4 Camera::getProjectionMatrix() const {
+    return glm::perspective(glm::radians(fov), aspectRatio, nearClip, farClip);
+}
+
+const glm::vec3& Camera::getPosition() const {
+    return position;
+}
+
+const glm::vec3& Camera::getTarget() const {
+    return target;
+}
+
+const glm::vec3& Camera::getUp() const {
+    return up;
+}
+
+void Camera::updateVectors() {
+    forward.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    forward.y = sin(glm::radians(pitch));
+    forward.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    forward = glm::normalize(forward);
+
+    right = glm::normalize(glm::cross(forward, glm::vec3(0.0f, 1.0f, 0.0f)));
+    up = glm::normalize(glm::cross(right, forward));
+}
 
 } // namespace engine::graphics
