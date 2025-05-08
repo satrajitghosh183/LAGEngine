@@ -244,31 +244,7 @@ The LAG Engine comes with several demonstration applications:
 - **Space** - Create new ball
 - **R** - Reset simulation
 
----
 
-## 📚 Documentation
-
-Full API documentation can be generated using Doxygen:
-
-```bash
-doxygen Doxyfile
-```
-
-Documentation will be generated in the `docs/` directory.
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request or open an Issue to discuss proposed changes or report bugs.
-
----
 
 ## 🌟 Acknowledgments
 
