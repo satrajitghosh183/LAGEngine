@@ -13,7 +13,7 @@ void PhysicsWorld3D::setGravity(const glm::vec3& g) {
 void PhysicsWorld3D::update(float dt, int solverIterations_) {
     solverIterations = solverIterations_;
 
-    // 🚀 Now simply use the base class update
+    // Now simply use the base class update
     VertletSystem3D::update(dt, gravity, solverIterations);
 }
 

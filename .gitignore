@@ -9,7 +9,8 @@ CMakeFiles/
 Makefile
 cmake_install.cmake
 CMakeLists.txt.user
-
+Documents/
+run_game_engine.sh
 # Compiler-generated files
 *.obj
 *.o
@@ -44,3 +45,4 @@ Thumbs.db  # Windows-specific
 # External dependencies (optional: If using prebuilt libraries)
 /vendor/
 .qodo
+cloth-simulation/Editor/extern/imgui/

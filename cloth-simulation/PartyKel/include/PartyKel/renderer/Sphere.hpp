@@ -37,7 +37,7 @@ public:
 
 private:
     std::vector<Vertex> m_Vertices;
-    GLsizei m_nVertexCount; /
+    GLsizei m_nVertexCount; 
 };
 
 struct SphereHandler{

@@ -59,7 +59,7 @@ struct Flag {
     float L1;
     glm::vec2 L2;
 
-    float K0, K1, K2
+    float K0, K1, K2;
     float V0, V1, V2; 
 
 
@@ -241,7 +241,9 @@ int main() {
     bool wireframe              = false;
 
     FlagRenderer3D renderer(flag.gridWidth, flag.gridHeight);
-    Octree<glm::vec3> octree(7, glm::vec3(0,-10,0), glm::vec3(50.f));
+    // Octree<glm::vec3> octree(7, glm::vec3(0,-10,0), glm::vec3(50.f));
+    // Massive octree - 1000 units in each direction, centered at origin
+    Octree<glm::vec3> octree(10, glm::vec3(0,0,0), glm::vec3(200.f));
 
     glm::mat4 projection = glm::perspective(70.f, float(WINDOW_WIDTH) / WINDOW_HEIGHT, 0.1f, 100.f);
 
@@ -411,3 +413,5 @@ int main() {
 
     return EXIT_SUCCESS;
 }
+
+

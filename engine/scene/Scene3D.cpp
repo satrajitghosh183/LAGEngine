@@ -24,30 +24,41 @@ Scene3D::Scene3D(float aspectRatio)
 
     physicsWorld = std::make_shared<engine::physics::PhysicsWorld3D>();
 
-    // Material properties
-    clothMaterial.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
-    clothMaterial.diffuse = glm::vec3(0.6f, 0.5f, 0.4f);
-    clothMaterial.specular = glm::vec3(0.2f, 0.2f, 0.2f);
-    clothMaterial.shininess = 32.0f;
+    // // Material properties
+    // clothMaterial.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+    // clothMaterial.diffuse = glm::vec3(0.6f, 0.5f, 0.4f);
+    // clothMaterial.specular = glm::vec3(0.2f, 0.2f, 0.2f);
+    // clothMaterial.shininess = 32.0f;
+    // Material properties for a more attractive cloth
+    clothMaterial.ambient = glm::vec3(0.2f, 0.2f, 0.2f);        // Darker ambient for depth
+    clothMaterial.diffuse = glm::vec3(0.3f, 0.5f, 0.8f);        // Blue-ish color (or try other colors)
+    clothMaterial.specular = glm::vec3(0.5f, 0.5f, 0.5f);       // More prominent highlights
+    clothMaterial.shininess = 16.0f;                            // Less concentrated highlights (was 32.0f)
 
-    // Light properties
-    sceneLight.position = glm::vec3(5.0f, 5.0f, 5.0f);
-    sceneLight.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
-    sceneLight.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
-    sceneLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+    // // Light properties
+    // sceneLight.position = glm::vec3(5.0f, 5.0f, 5.0f);
+    // sceneLight.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+    // sceneLight.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
+    // sceneLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
 
+
+        // Light properties for better illumination
+    sceneLight.position = glm::vec3(2.0f, 5.0f, 3.0f);          // Reposition light for better shadows
+    sceneLight.ambient = glm::vec3(0.2f, 0.2f, 0.3f);           // Slightly blue-tinted ambient
+    sceneLight.diffuse = glm::vec3(1.0f, 0.9f, 0.8f);           // Warm-tinted main light
+    sceneLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);          // Keep bright highlights
     // Cloth setup
     auto cloth = std::make_shared<engine::physics::ClothSolver3D>(
         *physicsWorld,
         clothWidth, clothHeight,
         0.1f,
-        0.2f,    // Structural stiffness
-        0.3f,    // Shear stiffness
-        0.1f     // Bend stiffness
+        0.3f,    // Structural stiffness
+        0.4f,    // Shear stiffness
+        0.3f     // Bend stiffness
     );
 
     cloth->createCloth(
-        glm::vec3(-clothWidth * 0.05f, 2.5f, 0.0f),
+        glm::vec3(-clothWidth * 0.05f, 3.0f, 0.0f),
         glm::vec3(1.0f, 0.0f, 0.0f),
         glm::vec3(0.0f, -1.0f, 0.0f)
     );

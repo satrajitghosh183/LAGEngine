@@ -1,0 +1,207 @@
+{
+    "entities": [
+        {
+            "color": [
+                0.5,
+                0.5,
+                0.5,
+                1.0
+            ],
+            "id": 1,
+            "name": "Ground",
+            "physics": {
+                "friction": 0.30000001192092896,
+                "isStatic": true,
+                "mass": 1.0,
+                "restitution": 0.699999988079071,
+                "useGravity": false
+            },
+            "position": [
+                0.0,
+                -0.05000000074505806,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                15.0,
+                0.10000000149011612,
+                15.0
+            ],
+            "type": 2
+        },
+        {
+            "color": [
+                0.800000011920929,
+                0.20000000298023224,
+                0.20000000298023224,
+                1.0
+            ],
+            "id": 2,
+            "name": "Ball",
+            "physics": {
+                "friction": 0.30000001192092896,
+                "isStatic": false,
+                "mass": 1.0,
+                "restitution": 0.699999988079071,
+                "useGravity": true
+            },
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": 0
+        },
+        {
+            "color": [
+                0.800000011920929,
+                0.20000000298023224,
+                0.20000000298023224,
+                1.0
+            ],
+            "id": 3,
+            "name": "Ball",
+            "physics": {
+                "friction": 0.30000001192092896,
+                "isStatic": false,
+                "mass": 1.0,
+                "restitution": 0.699999988079071,
+                "useGravity": true
+            },
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": 0
+        },
+        {
+            "color": [
+                0.800000011920929,
+                0.20000000298023224,
+                0.20000000298023224,
+                1.0
+            ],
+            "id": 4,
+            "name": "Ball",
+            "physics": {
+                "friction": 0.30000001192092896,
+                "isStatic": false,
+                "mass": 1.0,
+                "restitution": 0.699999988079071,
+                "useGravity": true
+            },
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": 0
+        },
+        {
+            "clothDamping": 0.009999999776482582,
+            "clothResolution": 10,
+            "clothSize": 5.0,
+            "clothStiffness": 100.0,
+            "color": [
+                0.20000000298023224,
+                0.6000000238418579,
+                0.800000011920929,
+                1.0
+            ],
+            "id": 5,
+            "name": "Cloth",
+            "physics": {
+                "friction": 0.30000001192092896,
+                "isStatic": false,
+                "mass": 0.10000000149011612,
+                "restitution": 0.699999988079071,
+                "useGravity": true
+            },
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                5.0,
+                0.10000000149011612,
+                5.0
+            ],
+            "type": 1
+        },
+        {
+            "color": [
+                0.5,
+                0.5,
+                0.5,
+                1.0
+            ],
+            "id": 6,
+            "name": "Plane",
+            "physics": {
+                "friction": 0.30000001192092896,
+                "isStatic": true,
+                "mass": 1.0,
+                "restitution": 0.699999988079071,
+                "useGravity": false
+            },
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                10.0,
+                0.10000000149011612,
+                10.0
+            ],
+            "type": 2
+        }
+    ],
+    "nextEntityId": 7
+}

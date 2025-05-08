@@ -2,7 +2,7 @@
 #include "engine/objects/Cloth2D.hpp"
 #include "engine/objects/Ball2D.hpp"
 #include <cmath>
-
+#include <iostream>
 namespace engine::objects {
 
     using namespace physics;
@@ -53,22 +53,91 @@ namespace engine::objects {
         projectiles = proj;
     }
 
-    void Cloth2D::checkCollisionAndTear() {
-        if (!projectiles) return;
+//     void Cloth2D::checkCollisionAndTear() {
+//         if (!projectiles) return;
 
-        for (auto* ball : *projectiles) {
-            sf::Vector2f ballPos = ball->particle.pos;
-            float radius = ball->radius;
+//         for (auto* ball : *projectiles) {
+//             sf::Vector2f ballPos = ball->particle.pos;
+//             float radius = ball->radius;
 
-            constraints.erase(std::remove_if(constraints.begin(), constraints.end(),
-                [&](const Constraint2D& c) {
-                    const auto& p1 = particles[c.p1Index].pos;
-                    const auto& p2 = particles[c.p2Index].pos;
-                    return (std::hypot(p1.x - ballPos.x, p1.y - ballPos.y) < radius) ||
-                           (std::hypot(p2.x - ballPos.x, p2.y - ballPos.y) < radius);
-                }),
-                constraints.end());
+//             constraints.erase(std::remove_if(constraints.begin(), constraints.end(),
+//                 [&](const Constraint2D& c) {
+//                     const auto& p1 = particles[c.p1Index].pos;
+//                     const auto& p2 = particles[c.p2Index].pos;
+//                     return (std::hypot(p1.x - ballPos.x, p1.y - ballPos.y) < radius) ||
+//                            (std::hypot(p2.x - ballPos.x, p2.y - ballPos.y) < radius);
+//                 }),
+//                 constraints.end());
+//         }
+//     }
+
+// }
+void Cloth2D::checkCollisionAndTear() {
+    if (!projectiles) return;
+
+    for (auto* ball : *projectiles) {
+        if (!ball->active || !ball->visible) continue;
+        
+        sf::Vector2f ballPos = ball->particle.pos;
+        float radius = ball->radius;
+        
+        // Calculate ball velocity for impact force
+        sf::Vector2f ballVel = ball->particle.pos - ball->particle.oldPos;
+        float speed = std::sqrt(ballVel.x * ballVel.x + ballVel.y * ballVel.y);
+        
+        // Debugging output
+        bool hitCloth = false;
+
+        // Check for collisions with cloth points
+        for (auto& p : particles) {
+            float dist = std::hypot(p.pos.x - ballPos.x, p.pos.y - ballPos.y);
+            if (dist < radius + 5.0f) {  // 5.0f is a small buffer
+                // Push the point
+                sf::Vector2f dir = p.pos - ballPos;
+                // Normalize direction
+                float len = std::hypot(dir.x, dir.y);
+                if (len > 0) {
+                    dir.x /= len;
+                    dir.y /= len;
+                    
+                    // Push with force proportional to ball speed
+                    float pushForce = std::min(speed * 0.8f, 20.0f);
+                    
+                    if (!p.locked) {
+                        p.pos += dir * pushForce;
+                    }
+                    
+                    hitCloth = true;
+                }
+            }
+        }
+
+        // Check for constraint breaking
+        constraints.erase(std::remove_if(constraints.begin(), constraints.end(),
+            [&](const Constraint2D& c) {
+                const auto& p1 = particles[c.p1Index].pos;
+                const auto& p2 = particles[c.p2Index].pos;
+                
+                // Break if either point is too close to the ball
+                bool breakConstraint = (std::hypot(p1.x - ballPos.x, p1.y - ballPos.y) < radius + 2.0f) ||
+                                     (std::hypot(p2.x - ballPos.x, p2.y - ballPos.y) < radius + 2.0f);
+                
+                // Also check if the constraint is stretched too much
+                float currentLength = std::hypot(p1.x - p2.x, p1.y - p2.y);
+                bool tooStretched = (currentLength > c.restLength * 1.5f);
+                
+                return breakConstraint || (tooStretched && speed > 15.0f);
+            }),
+            constraints.end());
+            
+        if (hitCloth) {
+            // Slow down the ball when it hits cloth
+            sf::Vector2f ballVelocity = ball->particle.pos - ball->particle.oldPos;
+            ball->particle.oldPos = ball->particle.pos - (ballVelocity * 0.8f);
+            
+            // Debugging
+            std::cout << "Ball hit cloth! Speed before: " << speed << std::endl;
         }
     }
-
+}
 }
