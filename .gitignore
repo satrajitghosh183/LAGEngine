@@ -41,7 +41,7 @@ Thumbs.db  # Windows-specific
 
 # Shader cache (optional)
 *.spv
-
+Documents/Random/
 # External dependencies (optional: If using prebuilt libraries)
 /vendor/
 .qodo
