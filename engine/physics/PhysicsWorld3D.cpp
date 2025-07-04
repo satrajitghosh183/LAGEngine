@@ -34,3 +34,28 @@ void PhysicsWorld3D::addBall(const std::shared_ptr<engine::objects::Ball3D>& bal
 }
 
 } // namespace engine::physics
+
+
+void PhysicsWorld3D::addRigidBody(std::shared_ptr<RigidBody> body) {
+    rigidBodies.push_back(body);
+}
+
+void PhysicsWorld3D::removeRigidBody(std::shared_ptr<RigidBody> body) {
+    auto it = std::find(rigidBodies.begin(), rigidBodies.end(), body);
+    if (it != rigidBodies.end()) {
+        rigidBodies.erase(it);
+    }
+}
+
+// In the update method, add:
+void PhysicsWorld3D::update(float dt, int solverIterations_) {
+    // ... existing cloth code ...
+    
+    // Update rigid bodies
+    for (auto& body : rigidBodies) {
+        if (body->getBodyType() == RigidBody::BodyType::Dynamic) {
+            body->applyForce(gravity * body->getMass());
+            body->integrate(dt);
+        }
+    }
+}

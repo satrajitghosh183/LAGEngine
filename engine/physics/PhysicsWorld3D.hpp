@@ -14,7 +14,13 @@ namespace engine::physics {
 class PhysicsWorld3D : public VertletSystem3D {
 public:
     PhysicsWorld3D();
+    // Add rigid body support to existing cloth system
+    void addRigidBody(std::shared_ptr<RigidBody> body);
+    void removeRigidBody(std::shared_ptr<RigidBody> body);
+    const std::vector<std::shared_ptr<RigidBody>>& getRigidBodies() const { return rigidBodies; }
 
+
+    
     void setGravity(const glm::vec3& gravity);
     void update(float dt, int solverIterations = 5);
 
@@ -27,7 +33,7 @@ public:
 private:
     glm::vec3 gravity;
     int solverIterations;
-
+    std::vector<std::shared_ptr<RigidBody>> rigidBodies;
     std::vector<std::shared_ptr<ClothSolver3D>> cloths;
     std::vector<std::shared_ptr<engine::objects::Ball3D>> balls;
 };
